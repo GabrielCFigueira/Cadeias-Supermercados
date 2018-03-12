@@ -1,0 +1,17 @@
+# C gitignore
+
+# C
+#-	Object file
+#-	Compiled header
+#-	Executables
+
+*.o
+
+*.gch
+
+*.out
+*.exe
+
+# Project specific
+#-	Final executable
+asa.out
