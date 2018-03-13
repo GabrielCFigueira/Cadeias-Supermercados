@@ -26,31 +26,44 @@ typedef struct node {
 
 
 
-/* finds the first non null pointer and inserts it in the adjacency list */
-void insertInAdjList(Node orig, int id) {
+/* creates a new node */
+Node buildNode(int id) {
 
-  if(orig != NULL)
-    while(orig->next != NULL)
-      orig = orig->next;
+  Node new = (Node) calloc(1, sizeof(struct node));
+  new->id = id;
 
-  orig = (Node) calloc(1, sizeof(struct node));
-  orig->id = id;
-
+  return new;
 
 }
 
 
 
+/* inserts a new node at the beggining of the adjacency list */
+void insertInAdjList(Node * adjList, Node new) {
 
+  if(*adjList != NULL) {
+    new->next = (*adjList)->next;
+    (*adjList)->next = new;
+  }
+
+  *adjList = new;
+
+}
+
+
+
+/* funtion which receives input and builds the adjacency list*/
 Node * buildAdjList() {
   int N, M, vertex, edge;
   scanf("%d", &N);
   scanf("%d", &M);
   Node * adjList = (Node*) calloc(1, sizeof(Node) * N);
-  adjList--;
+
+  adjList--; /*the vertexes are bounded from 1 to N*/
+
   while(M--) {
     scanf("%d %d", &vertex, &edge);
-    insertInAdjList(adjList[vertex], edge);
+    insertInAdjList(&adjList[vertex], buildNode(edge));
   }
 
   return adjList;
