@@ -12,7 +12,7 @@ LIB_FILES   := ../lib
 CC          := gcc
 CFLAGS      := -Wall -Wextra -pedantic -pedantic-errors -g
 
-basename    := main
+basename    := main list
 objects      = $(addsuffix .o, $(basename))
 
 vpath %.h $(SRC_FILES):$(LIB_FILES)
@@ -24,7 +24,8 @@ $(PROGRAM) : $(objects)
 
 
 # Source code
-main.o         :
+main.o         : list.h
+list.o         : list.h
 
 # Utils
 .PHONY : clean cleaner full gp clean-p
