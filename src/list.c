@@ -7,7 +7,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h> /*for uint_fast types TODO*/
 #include "list.h"
 
 
@@ -104,6 +103,7 @@ void invertConnection(int from, Node to) {
 Node * transposeAdjList(Node * adjList) {
 
   adjListAuxPointer = (Node*) calloc(1, sizeof(Node) * N_VERTEXES);
+  adjListAuxPointer--;
   traverseAdjList(adjList, invertConnection);
   return adjListAuxPointer;
 
@@ -128,7 +128,6 @@ void showAdjList(const Node * adjList) {
 void freeAdjList(Node * adjList) {
 
   traverseAdjList(adjList, freeNode);
-  free(adjList);
-  N_VERTEXES = N_CONNECTIONS = 0;
+  free(++adjList);
 
 }
