@@ -18,10 +18,12 @@ typedef struct node {
 
 static int N_VERTEXES;
 static int N_CONNECTIONS;
+static Node * adjListAuxPointer;
 
 
 static Node buildNode(int id);
-static void freeNode(Node n);
+static void freeNode(int from, Node to);
+static void invertConnection(int from, Node to);
 static void insertInAdjList(Node * adjList, Node new);
 
 
@@ -36,7 +38,8 @@ Node buildNode(int id) {
 }
 
 /* frees memory associated with a node*/
-void freeNode(Node n) {
+void freeNode(int i, Node n) {
+  (void) i;
   free(n);
 }
 
@@ -67,7 +70,7 @@ Node * buildAdjList() {
 
   N_VERTEXES = N;
   N_CONNECTIONS = M;
-  
+
   while(M--) {
     scanf("%d %d", &vertex, &edge);
     insertInAdjList(&adjList[vertex], buildNode(edge));
@@ -79,17 +82,33 @@ Node * buildAdjList() {
 
 /* Meta function to do something with the nodes in the adjency list
  * It goes in order of vertexes */
-void traverseAdjList(Node * adjList, void (*func)(Node)){
+void traverseAdjList(Node * adjList, void (*func)(int, Node)){
   Node conn, scratchpad;
   for(int i=1; i <= N_VERTEXES; ++i) {
     conn = adjList[i];
     while(conn != NULL) {
       scratchpad = conn;
       conn = conn->next;
-      func(scratchpad);
+      func(i, scratchpad);
     }
   }
 }
+
+/* Insert (inverted) connection in new adjacency list auxiliary pointer */
+void invertConnection(int from, Node to) {
+  insertInAdjList(&adjListAuxPointer[to->id], buildNode(from));
+}
+
+
+/* Transposes list of adjacencies, one node at a time */
+Node * transposeAdjList(Node * adjList) {
+
+  adjListAuxPointer = (Node*) calloc(1, sizeof(Node) * N_VERTEXES);
+  traverseAdjList(adjList, invertConnection);
+  return adjListAuxPointer;
+
+}
+
 
 /* Shows that everything went fine (for debugging purposes)*/
 void showAdjList(const Node * adjList) {
@@ -110,5 +129,6 @@ void freeAdjList(Node * adjList) {
 
   traverseAdjList(adjList, freeNode);
   free(adjList);
+  N_VERTEXES = N_CONNECTIONS = 0;
 
 }

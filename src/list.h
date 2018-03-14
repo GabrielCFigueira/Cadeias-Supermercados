@@ -12,6 +12,8 @@ struct node;
 typedef struct node * Node;
 
 Node * buildAdjList();
-void   traverseAdjList(Node * adjList, void (*func)(Node));
+Node * transposeAdjList(Node * adjList);
+void   traverseAdjList(Node * adjList, void (*func)(int, Node));
 void   showAdjList(const Node * adjList);
 void   freeAdjList(Node * adjList);
+
