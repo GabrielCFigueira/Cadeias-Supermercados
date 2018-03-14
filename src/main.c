@@ -1,12 +1,12 @@
 #include <stdio.h>
-#include "list.h"
+#include "adj.h"
 
 int main() {
-  Node *ola = buildAdjList();
-  Node *copy = transposeAdjList(ola);
-  showAdjList(copy);
-  showAdjList(ola);
-  freeAdjList(copy);
-  freeAdjList(ola);
+  Graph ola = buildGraph();
+  Graph copy = transposeGraph(ola);
+  showGraph(ola);
+  showGraph(copy);
+  freeGraph(ola);
+  freeGraph(copy);
   return 0;
 }

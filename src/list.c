@@ -7,7 +7,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "list.h"
+#include "adj.h"
 
 
 typedef struct node {
@@ -15,26 +15,21 @@ typedef struct node {
   int id;
 } * Node;
 
-static int N_VERTEXES;
-static int N_CONNECTIONS;
+
+struct graph {
+  Node * adjList;
+  int n_vertexes;
+  int n_connections;
+} ;
+
 static Node * adjListAuxPointer;
 
 
-static Node buildNode(int id);
 static void freeNode(int from, Node to);
+static void traverseGraph(Graph g, void (*func)(int, Node));
 static void invertConnection(int from, Node to);
-static void insertInAdjList(Node * adjList, Node new);
+static void insertInAdjList(Node * adjList, int id);
 
-
-
-/* creates a new node */
-Node buildNode(int id) {
-
-  Node new = (Node) calloc(1, sizeof(struct node));
-  new->id = id;
-
-  return new;
-}
 
 /* frees memory associated with a node*/
 void freeNode(int i, Node n) {
@@ -43,48 +38,46 @@ void freeNode(int i, Node n) {
 }
 
 
-
 /* inserts a new node at the beggining of the adjacency list */
-void insertInAdjList(Node * adjList, Node new) {
+void insertInAdjList(Node * adjList, int id) {
 
-  if(*adjList != NULL) {
-    new->next = (*adjList)->next;
-    (*adjList)->next = new;
-  }
-
+  Node new = (Node) calloc(1, sizeof(struct node));
+  new->id = id;
+  new->next = *adjList;
   *adjList = new;
-
 }
 
 
 
-/* funtion which receives input and builds the adjacency list*/
-Node * buildAdjList() {
+/* function which receives input and builds the adjacency list*/
+Graph buildGraph() {
   int N, M, vertex, edge;
   scanf("%d", &N);
   scanf("%d", &M);
-  Node * adjList = (Node*) calloc(1, sizeof(Node) * N);
 
-  adjList--; /*the vertexes are bounded from 1 to N*/
+  Graph res = (Graph) calloc(1, sizeof(struct graph));
+  res->adjList = (Node*) calloc(1, sizeof(Node) * N);
 
-  N_VERTEXES = N;
-  N_CONNECTIONS = M;
+  res->adjList--; /*the vertexes are bounded from 1 to N*/
+
+  res->n_vertexes = N;
+  res->n_connections = M;
 
   while(M--) {
     scanf("%d %d", &vertex, &edge);
-    insertInAdjList(&adjList[vertex], buildNode(edge));
+    insertInAdjList(res->adjList + vertex, edge);
   }
 
-  return adjList;
+  return res;
 }
 
 
-/* Meta function to do something with the nodes in the adjency list
+/* Meta function to do something with the nodes in the adjacency list
  * It goes in order of vertexes */
-void traverseAdjList(Node * adjList, void (*func)(int, Node)){
+void traverseGraph(Graph g, void (*func)(int, Node)){
   Node conn, scratchpad;
-  for(int i=1; i <= N_VERTEXES; ++i) {
-    conn = adjList[i];
+  for(int i=1; i <= g->n_vertexes; ++i) {
+    conn = g->adjList[i];
     while(conn != NULL) {
       scratchpad = conn;
       conn = conn->next;
@@ -95,27 +88,31 @@ void traverseAdjList(Node * adjList, void (*func)(int, Node)){
 
 /* Insert (inverted) connection in new adjacency list auxiliary pointer */
 void invertConnection(int from, Node to) {
-  insertInAdjList(&adjListAuxPointer[to->id], buildNode(from));
+  insertInAdjList(adjListAuxPointer + to->id, from);
 }
 
 
 /* Transposes list of adjacencies, one node at a time */
-Node * transposeAdjList(Node * adjList) {
+Graph transposeGraph(const Graph g) {
 
-  adjListAuxPointer = (Node*) calloc(1, sizeof(Node) * N_VERTEXES);
+  adjListAuxPointer = (Node*) calloc(1, sizeof(Node) * g->n_vertexes);
   adjListAuxPointer--;
-  traverseAdjList(adjList, invertConnection);
-  return adjListAuxPointer;
+  traverseGraph(g, invertConnection);
+  Graph res = (Graph) calloc(1, sizeof(struct graph));
+  res->n_vertexes = g->n_vertexes;
+  res->n_connections = g->n_connections;
+  res->adjList = adjListAuxPointer;
+  return res;
 
 }
 
 
 /* Shows that everything went fine (for debugging purposes)*/
-void showAdjList(const Node * adjList) {
+void showGraph(const Graph g) {
   Node conn;
-  for(int i=1; i <= N_VERTEXES; ++i) {
+  for(int i=1; i <= g->n_vertexes; ++i) {
     printf("Vertex %d: ", i);
-    conn = adjList[i];
+    conn = g->adjList[i];
     while(conn != NULL) {
       printf("%d ", conn->id);
       conn = conn->next;
@@ -125,9 +122,19 @@ void showAdjList(const Node * adjList) {
 }
 
 
-void freeAdjList(Node * adjList) {
 
-  traverseAdjList(adjList, freeNode);
-  free(++adjList);
+void freeGraph(Graph g) {
+  traverseGraph(g, freeNode);
+  free(++(g->adjList));
+  free(g);
+}
 
+void doForEachAdjU(Graph g, int u, void (*func)(Graph, int, int)) {
+  Node conn, scratchpad;
+  conn = g->adjList[u];
+  while(conn != NULL) {
+    scratchpad = conn;
+    conn = conn->next;
+    func(g, u, scratchpad->id);
+  }
 }

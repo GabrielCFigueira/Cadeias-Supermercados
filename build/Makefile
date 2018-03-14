@@ -24,8 +24,8 @@ $(PROGRAM) : $(objects)
 
 
 # Source code
-main.o         : list.h
-list.o         : list.h
+main.o         : adj.h
+list.o         : adj.h
 
 # Utils
 .PHONY : clean cleaner full gp clean-p
