@@ -9,7 +9,6 @@
 #include <stdlib.h>
 #include "adj.h"
 
-
 typedef struct node {
   struct node * next;
   int id;
@@ -29,6 +28,9 @@ static void freeNode(int from, Node to);
 static void traverseGraph(Graph g, void (*func)(int, Node));
 static void invertConnection(int from, Node to);
 static void insertInAdjList(Node * adjList, int id);
+
+
+int nVertex(Graph g) { return g->n_vertexes; }
 
 
 /* frees memory associated with a node*/
