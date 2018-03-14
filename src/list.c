@@ -65,12 +65,13 @@ Node * buildAdjList() {
 
   adjList--; /*the vertexes are bounded from 1 to N*/
 
+  N_VERTEXES = N;
+  N_CONNECTIONS = M;
+  
   while(M--) {
     scanf("%d %d", &vertex, &edge);
     insertInAdjList(&adjList[vertex], buildNode(edge));
   }
-  N_VERTEXES = N;
-  N_CONNECTIONS = M;
 
   return adjList;
 }
