@@ -10,9 +10,18 @@
 
 typedef struct graph * Graph;
 
+
+typedef struct node {
+  struct node * next;
+  int id;
+} * Node;
+
+
 Graph  buildGraph();
 Graph  transposeGraph(Graph g);
 void   showGraph(const Graph g);
 void   freeGraph(Graph g);
 void   doForEachAdjU(Graph g, int u, void (*func)(Graph, int, int));
 int    nVertex(Graph g);
+int    nConnection(Graph g);
+Node * getAdjList(Graph g);
