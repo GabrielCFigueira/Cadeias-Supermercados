@@ -43,6 +43,7 @@ void DFS(Graph g) {
 
 int main() {
   Graph ola = buildGraph();
+  showGraph(ola);
   DFS(ola);
   freeGraph(ola);
   free(color+1);

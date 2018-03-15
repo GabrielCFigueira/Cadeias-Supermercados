@@ -12,20 +12,34 @@ LIB_FILES   := ../lib
 CC          := gcc
 CFLAGS      := -Wall -Wextra -pedantic -pedantic-errors -g
 
-basename    := main list
+basename    := main
 objects      = $(addsuffix .o, $(basename))
 
 vpath %.h $(SRC_FILES):$(LIB_FILES)
 vpath %.c $(SRC_FILES):$(LIB_FILES)
 
+define compile
+	$(CC) $(CFLAGS) $(objects) -o $(PROGRAM)
+endef
+
+.PHONY: wlist wmatrix
+
+wlist   : basename += list
+wlist   : $(objects) list.o
+	$(compile)
+
+wmatrix : basename += matrix
+wmatrix : $(objects) matrix.o
+	$(compile)
+
 
 $(PROGRAM) : $(objects)
-	$(CC) $(CFLAGS) $^ -o $@
 
 
 # Source code
 main.o         : adj.h
 list.o         : adj.h
+matrix.o       : adj.h
 
 # Utils
 .PHONY : clean cleaner full gp clean-p
