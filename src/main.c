@@ -132,6 +132,7 @@ int main() {
   Graph ola = buildGraph();
   showGraph(ola);
   Tarjan(ola);
+  showGraph(reduceGraph(ola, translation));
   /*DFS(ola);
   freeGraph(ola);
   free(color+1);

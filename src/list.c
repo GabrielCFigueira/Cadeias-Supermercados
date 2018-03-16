@@ -24,11 +24,14 @@ struct graph {
 } ;
 
 static Node * adjListAuxPointer;
+static int * translation;
+static int n_connections;
 
 static void freeNode(int from, Node to);
 static void traverseGraph(Graph g, void (*func)(int, Node));
 static void invertConnection(int from, Node to);
 static void insertInAdjList(Node * adjList, int id);
+static void reduceGraph_aux(Graph g, int u, int v);
 
 
 int nVertex(Graph g) { return g->n_vertexes; }
@@ -54,12 +57,17 @@ void insertInAdjList(Node * adjList, int id) {
 
 
 /* function which receives input and builds the adjacency list*/
-Graph readGraph() {
+Graph buildGraph() {
   int N, M, vertex, edge;
   scanf("%d", &N);
   scanf("%d", &M);
 
-  Graph res = buildGraph(N);
+  Graph res = (Graph) calloc(1, sizeof(struct graph));
+  res->adjList = (Node*) calloc(1, sizeof(Node) * N);
+
+  res->adjList--; /*the vertexes are bounded from 1 to N*/
+
+  res->n_vertexes = N;
 
   res->n_connections = M;
 
@@ -71,19 +79,6 @@ Graph readGraph() {
   return res;
 }
 
-
-Graph buildGraph(int N) {
-  
-  Graph res = (Graph) calloc(1, sizeof(struct graph));
-  res->adjList = (Node*) calloc(1, sizeof(Node) * N);
-
-  res->adjList--; /*the vertexes are bounded from 1 to N*/
-
-  res->n_vertexes = N;
-  res->n_connections = 0;
-
-  return res;
-}
 
 /* Meta function to do something with the nodes in the adjacency list
  * It goes in order of vertexes */
@@ -149,5 +144,40 @@ void doForEachAdjU(Graph g, int u, void (*func)(Graph, int, int)) {
     scratchpad = conn;
     conn = conn->next;
     func(g, u, scratchpad->id);
+  }
+}
+
+
+
+Graph reduceGraph(Graph g, int * trans) {
+
+  translation = trans;
+
+  Graph res = (Graph) calloc(1, sizeof(struct graph));
+  res->adjList = adjListAuxPointer = (Node*) calloc(1, sizeof(Node) * nVertex(g));
+
+  res->adjList--; /*the vertexes are bounded from 1 to N*/
+  adjListAuxPointer--;
+
+  res->n_vertexes = nVertex(g);
+  
+  for (int i = 1; i <= nVertex(g); i++)
+    doForEachAdjU(g, i, reduceGraph_aux);
+
+  res->n_connections = n_connections;
+
+  return res;
+}
+
+
+void reduceGraph_aux(Graph g, int u, int v) {
+
+  (void) g;
+  v = translation[v];
+  u = translation[u];
+
+  if(u != v) {
+    insertInAdjList(adjListAuxPointer + u, v);
+    n_connections += 1;
   }
 }

@@ -11,9 +11,9 @@
 typedef struct graph * Graph;
 
 
-Graph  buildGraph(int N);
-Graph  readGraph();
+Graph  buildGraph();
 Graph  transposeGraph(Graph g);
+Graph  reduceGraph(Graph g, int * trans);
 void   showGraph(const Graph g);
 void   freeGraph(Graph g);
 void   doForEachAdjU(Graph g, int u, void (*func)(Graph, int, int));
