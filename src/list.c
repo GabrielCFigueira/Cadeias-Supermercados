@@ -54,17 +54,13 @@ void insertInAdjList(Node * adjList, int id) {
 
 
 /* function which receives input and builds the adjacency list*/
-Graph buildGraph() {
+Graph readGraph() {
   int N, M, vertex, edge;
   scanf("%d", &N);
   scanf("%d", &M);
 
-  Graph res = (Graph) calloc(1, sizeof(struct graph));
-  res->adjList = (Node*) calloc(1, sizeof(Node) * N);
+  Graph res = buildGraph(N);
 
-  res->adjList--; /*the vertexes are bounded from 1 to N*/
-
-  res->n_vertexes = N;
   res->n_connections = M;
 
   while(M--) {
@@ -75,6 +71,19 @@ Graph buildGraph() {
   return res;
 }
 
+
+Graph buildGraph(int N) {
+  
+  Graph res = (Graph) calloc(1, sizeof(struct graph));
+  res->adjList = (Node*) calloc(1, sizeof(Node) * N);
+
+  res->adjList--; /*the vertexes are bounded from 1 to N*/
+
+  res->n_vertexes = N;
+  res->n_connections = 0;
+
+  return res;
+}
 
 /* Meta function to do something with the nodes in the adjacency list
  * It goes in order of vertexes */

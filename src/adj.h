@@ -11,7 +11,8 @@
 typedef struct graph * Graph;
 
 
-Graph  buildGraph();
+Graph  buildGraph(int N);
+Graph  readGraph();
 Graph  transposeGraph(Graph g);
 void   showGraph(const Graph g);
 void   freeGraph(Graph g);
