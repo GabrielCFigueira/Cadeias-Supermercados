@@ -47,11 +47,13 @@ void DFS(Graph g) {
 
 
 
-
 static int visited = 0;
+static int n_scc = 0;
 static int stackPointer = -1; //Points to the first element that exists
 static int * discovery;
 static int * low;
+static int * translation;
+static int * scratch; static int scratchPointer=0;
 static int * stack;
 static int * in_stack;
 
@@ -64,19 +66,24 @@ static void tarjanVisit(Graph g, int vertex);
 #define stack_contains(a) (in_stack[a])
 
 void Tarjan(Graph g) {
-
-  int V = nVertex(g) + 1; //because we really want to go [1, nVertex]
+  //because we really want to go [1, nVertex], we do [0, nVertex]
+  int V = nVertex(g) + 1;
   int E = nConnection(g);
   // the stack can't go over the number of connections in the graph
   stack = (int*) calloc(E, sizeof(int));
-  in_stack = (int*) calloc(E, sizeof(int));
+  in_stack = (int*) calloc(V, sizeof(int));
+  scratch = (int*) calloc(E, sizeof(int));
+  translation = (int*) calloc(V, sizeof(int));
   discovery = (int*) malloc(sizeof(int)*V);
   low = (int*) malloc(sizeof(int)*V);
 
-  low = (int*) memset(low, INT_MAX, V);
-  discovery = (int*) memset(discovery, INT_MAX, V);
+  int i;
+  for(i=V; i>=0; --i)
+    low[i] = INT_MAX;
+  for(i=V; i>=0; --i)
+    discovery[i] = INT_MAX;
 
-  for (int i = 0; i < V; i++)
+  for (int i = 1; i < V; i++)
     if (low[i] == INT_MAX)
       tarjanVisit(g, i);
 
@@ -103,8 +110,16 @@ void tarjanVisit(Graph g, int vertex) {
   doForEachAdjU(g, vertex, tarjanVisit_aux);
 
   if(discovery[vertex] == low[vertex]) {
+    int lowest_in_scc = vertex;
+    n_scc++;
     while(vertex != (v = stack[stackPointer--])) {
       in_stack[v] = 0;
+      lowest_in_scc = min(v,lowest_in_scc);
+      scratch[++scratchPointer] = v;
+    }
+    scratch[++scratchPointer] = vertex;
+    while(0 != (v=scratch[scratchPointer--])) {
+      translation[v] = lowest_in_scc;
     }
   }
 }
