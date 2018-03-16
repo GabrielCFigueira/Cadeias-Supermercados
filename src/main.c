@@ -48,74 +48,65 @@ void DFS(Graph g) {
 
 
 static int visited = 0;
-static int stackPointer = 0;
+static int stackPointer = -1; //Points to the first element that exists
 static int * discovery;
 static int * low;
 static int * stack;
+static int * in_stack;
 
 static void Tarjan(Graph g);
 static void tarjanVisit(Graph g, int vertex);
-static int min(int a, int b);
-static int contains(int stack[], int vertex);
 
+
+#define min(a,b) (a<b?a:b)
+
+#define stack_contains(a) (in_stack[a])
 
 void Tarjan(Graph g) {
 
-  int V = nVertex(g);
-  stack = (int*) malloc(sizeof(int) * nConnection(g)); /*the stack can't go over the number of connections in the graph*/
+  int V = nVertex(g) + 1; //because we really want to go [1, nVertex]
+  int E = nConnection(g);
+  // the stack can't go over the number of connections in the graph
+  stack = (int*) calloc(E, sizeof(int));
+  in_stack = (int*) calloc(E, sizeof(int));
   discovery = (int*) malloc(sizeof(int)*V);
   low = (int*) malloc(sizeof(int)*V);
 
+  low = (int*) memset(low, INT_MAX, V);
+  discovery = (int*) memset(discovery, INT_MAX, V);
 
-  for (int i = 0; i < V; i++)
-    discovery[i] = INT_MAX;
   for (int i = 0; i < V; i++)
     if (low[i] == INT_MAX)
       tarjanVisit(g, i);
 
 }
 
+
+void tarjanVisit_aux(Graph g, int from, int to) {
+
+  if (low[to] == INT_MAX || stack_contains(to)) {
+      if(low[to] == INT_MAX) {
+        tarjanVisit(g, to);
+      }
+      low[from]=min(low[from],low[to]);
+  }
+}
+
 void tarjanVisit(Graph g, int vertex) {
 
+  int v;
   discovery[vertex] = low[vertex] = visited++;
-  stack[stackPointer++] = vertex;
-  Node conn = getAdjList(g)[vertex];
+  stack[++stackPointer] = vertex; //Push
+  in_stack[vertex] = 1;
 
-  while(conn != NULL) {
-    int adj = conn->id;
-    if (low[adj] == INT_MAX || contains(stack, adj)) {
-      if(low[adj] == INT_MAX)
-        tarjanVisit(g, adj);
-      low[vertex] = min(low[vertex], low[adj]);
-    }
-    conn = conn->next;
-  }
+  doForEachAdjU(g, vertex, tarjanVisit_aux);
 
   if(discovery[vertex] == low[vertex]) {
-    int u = stack[stackPointer];
-    while(stackPointer != 0 || u == vertex)
-      /* POP(stack[stackPointer]); */
-      stackPointer--;
+    while(vertex != (v = stack[stackPointer--])) {
+      in_stack[v] = 0;
+    }
   }
-
-
 }
-
-int min(int a, int b) {
-  if(a > b)
-    return a;
-  else
-    return b;
-}
-
-int contains(int * stack, int vertex) {
-  int localStackPointer = stackPointer;
-  for(; localStackPointer >= 0; localStackPointer--)
-    if(stack[localStackPointer] == vertex)
-      return 1;
-  return 0;
-}
-
 
 
 
@@ -124,12 +115,12 @@ int contains(int * stack, int vertex) {
 int main() {
   Graph ola = buildGraph();
   showGraph(ola);
-  DFS(ola);
   Tarjan(ola);
+  /*DFS(ola);
   freeGraph(ola);
   free(color+1);
   free(pai+1);
   free(f_time+1);
-  free(d_time+1);
+  free(d_time+1);*/
   return 0;
 }

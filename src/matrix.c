@@ -56,8 +56,8 @@ void doForEachAdjU(Graph g, int u, void (*func)(Graph, int, int)) {
   }
 }
 
-int nVertex(Graph g) { return g->n_vertexes; } //TODO: Macro this
-
+int nVertex(Graph g) { return g->n_vertexes; } //TODO: Macro these
+int nConnection(Graph g) { return g->n_connections; }
 
 /* Shows that everything went fine (for debugging purposes)*/
 void showGraph(const Graph g) {

@@ -11,6 +11,12 @@
 
 
 
+typedef struct node {
+  struct node * next;
+  int id;
+} * Node;
+
+
 struct graph {
   Node * adjList;
   int n_vertexes;
@@ -18,7 +24,6 @@ struct graph {
 } ;
 
 static Node * adjListAuxPointer;
-
 
 static void freeNode(int from, Node to);
 static void traverseGraph(Graph g, void (*func)(int, Node));
@@ -28,7 +33,6 @@ static void insertInAdjList(Node * adjList, int id);
 
 int nVertex(Graph g) { return g->n_vertexes; }
 int nConnection(Graph g) { return g->n_connections; }
-Node * getAdjList(Graph g) { return g->adjList; }
 
 
 /* frees memory associated with a node*/
