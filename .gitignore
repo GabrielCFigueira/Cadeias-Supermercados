@@ -10,8 +10,11 @@
 *.gch
 
 *.out
+!tests/students-tests/*.out
 *.exe
 
 # Project specific
 #-	Final executable
+#-	Test resukt
 asa.out
+tests/students-tests/*.gen

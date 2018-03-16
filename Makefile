@@ -9,8 +9,8 @@ RELEASE_NAME  := asa.out
 
 OBJ_FILES   := build
 SRC_FILES   := src
-#TST_FILES   := tests
-#TST_COMM    := ./run_tests.sh
+TST_FILES   := tests
+TST_COMM    := ./run_tests.sh
 
 ZIP         := zip
 ZIP_FLAGS   := -ur --quiet
