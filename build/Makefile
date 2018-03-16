@@ -22,7 +22,11 @@ define compile
 	$(CC) $(CFLAGS) $(objects) -o $(PROGRAM)
 endef
 
-.PHONY: wlist wmatrix
+.PHONY: wfastlist wlist wmatrix
+
+wfastlist   : basename += fast_list
+wfastlist   : $(objects) fast_list.o
+	$(compile)
 
 wlist   : basename += list
 wlist   : $(objects) list.o
@@ -40,11 +44,12 @@ $(PROGRAM) : $(objects)
 main.o         : adj.h
 list.o         : adj.h
 matrix.o       : adj.h
+fast_list.o    : adj.h
 
 # Utils
-.PHONY : clean cleaner full gp clean-p
+.PHONY : clean cleaner full
 clean   :
-	$(RM) $(objects)
+	$(RM) ./*.o
 
 cleaner : clean
 	$(RM) $(PROGRAM)
