@@ -160,7 +160,7 @@ Graph reduceGraph(Graph g, int * trans) {
   adjListAuxPointer--;
 
   res->n_vertexes = nVertex(g);
-  
+
   for (int i = 1; i <= nVertex(g); i++)
     doForEachAdjU(g, i, reduceGraph_aux);
 
@@ -180,4 +180,15 @@ void reduceGraph_aux(Graph g, int u, int v) {
     insertInAdjList(adjListAuxPointer + u, v);
     n_connections += 1;
   }
+}
+
+
+void printSccGraph(Graph g, int nScc) {
+
+  printf("%d\n%d\n", nScc, g->n_connections);
+
+  Node * adjList = g->adjList;
+  for(int i = 1; i <= nVertex(g); i++)
+    if(adjList[i] != NULL)
+      printf("%d %d\n", i, adjList[i]->id);
 }
