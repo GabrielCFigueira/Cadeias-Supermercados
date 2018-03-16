@@ -133,6 +133,7 @@ int main() {
   showGraph(ola);
   Tarjan(ola);
   showGraph(reduceGraph(ola, translation));
+  printSccGraph(reduceGraph(ola, translation), n_scc);
   /*DFS(ola);
   freeGraph(ola);
   free(color+1);

@@ -32,7 +32,7 @@ static void traverseGraph(Graph g, void (*func)(int, Node));
 static void invertConnection(int from, Node to);
 static void insertInAdjList(Node * adjList, int id);
 static void reduceGraph_aux(Graph g, int u, int v);
-
+static void printSccGraph_aux();
 
 int nVertex(Graph g) { return g->n_vertexes; }
 int nConnection(Graph g) { return g->n_connections; }
@@ -52,6 +52,22 @@ void insertInAdjList(Node * adjList, int id) {
   new->id = id;
   new->next = *adjList;
   *adjList = new;
+}
+
+void insertOrderlyInAdjList(Node * adjList, int id) {
+
+  Node new = (Node) calloc(1, sizeof(struct node));
+  new->id = id;
+  Node conn = *adjList;
+  if(conn == NULL)
+    *adjList = new;
+  else {
+    while(conn->next != NULL || (conn->next != NULL && conn->next->id < id))
+      conn = conn->next;
+    new->next = conn->next;
+    conn->next = new;
+  }
+
 }
 
 
@@ -177,18 +193,24 @@ void reduceGraph_aux(Graph g, int u, int v) {
   u = translation[u];
 
   if(u != v) {
-    insertInAdjList(adjListAuxPointer + u, v);
+    insertOrderlyInAdjList(adjListAuxPointer + u, v);
     n_connections += 1;
   }
 }
+
 
 
 void printSccGraph(Graph g, int nScc) {
 
   printf("%d\n%d\n", nScc, g->n_connections);
 
-  Node * adjList = g->adjList;
   for(int i = 1; i <= nVertex(g); i++)
-    if(adjList[i] != NULL)
-      printf("%d %d\n", i, adjList[i]->id);
+    doForEachAdjU(g, i, printSccGraph_aux);
+}
+
+void printSccGraph_aux(Graph g, int vertex, int conn) {
+
+  (void) g;
+  printf("%d %d\n", vertex, conn);
+
 }
