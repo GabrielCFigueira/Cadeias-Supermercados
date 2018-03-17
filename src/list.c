@@ -54,19 +54,27 @@ void insertInAdjList(Node * adjList, int id) {
   *adjList = new;
 }
 
-void insertOrderlyInAdjList(Node * adjList, int id) {
+int insertOrderlyInAdjList(Node * adjList, int id) {
 
   Node new = (Node) calloc(1, sizeof(struct node));
   new->id = id;
   Node conn = *adjList;
+
   if(conn == NULL)
     *adjList = new;
+
   else {
-    while(conn->next != NULL || (conn->next != NULL && conn->next->id < id))
+
+    while(conn->next != NULL && conn->next->id < id)
       conn = conn->next;
+    if(conn->id == id || (conn->next != NULL && conn->next->id == id))
+      return 0;
     new->next = conn->next;
     conn->next = new;
+
   }
+
+  return 1;
 
 }
 
@@ -207,6 +215,7 @@ void printSccGraph(Graph g, int nScc) {
 
   printf("%d\n%d\n", nScc, g->n_connections);
 
+  int i;
   for(i = 1; i <= nVertex(g); i++)
     doForEachAdjU(g, i, printSccGraph_aux);
 }
