@@ -204,8 +204,7 @@ void reduceGraph_aux(Graph g, int u, int v) {
   u = translation[u];
 
   if(u != v) {
-    insertOrderlyInAdjList(adjListAuxPointer + u, v);
-    n_connections += 1;
+    n_connections += insertOrderlyInAdjList(adjListAuxPointer + u, v);
   }
 }
 
