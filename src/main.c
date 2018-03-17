@@ -118,6 +118,7 @@ void tarjanVisit(Graph g, int vertex) {
       scratch[++scratchPointer] = v;
     }
     scratch[++scratchPointer] = vertex;
+    in_stack[vertex] = 0;
     while(0 != (v=scratch[scratchPointer--])) {
       translation[v] = lowest_in_scc;
     }
@@ -130,9 +131,7 @@ void tarjanVisit(Graph g, int vertex) {
 
 int main() {
   Graph ola = buildGraph();
-  showGraph(ola);
   Tarjan(ola);
-  showGraph(reduceGraph(ola, translation));
   printSccGraph(reduceGraph(ola, translation), n_scc);
   /*DFS(ola);
   freeGraph(ola);

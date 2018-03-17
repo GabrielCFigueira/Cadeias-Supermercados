@@ -92,7 +92,7 @@ Graph reduceGraph(Graph g, int * translation) {
     for(j=1; j <= g->n_vertexes; ++j) {
       if(g->data[base+j]) {
         v = translation[j];
-        if(u != v) {
+        if(u != v && 1 != res->data[u*g->n_vertexes + v]) {
           res->data[u*g->n_vertexes + v] = 1;
           res->n_connections++;
         }

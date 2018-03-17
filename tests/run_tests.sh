@@ -12,7 +12,6 @@ run() {
 	for t in "$TESTS_DIR"/st[0-9]*"$INPUTS"; do
 		echo $t
 		base="${t%$INPUTS}"
-		echo $base
 		$EXEC < "$t" >"$base""$OUTPUTS_GENERATED"
 	done
 }
@@ -20,12 +19,12 @@ run() {
 compare() {
 	for attempt in "$TESTS_DIR"/st[0-9]*"$OUTPUTS_GENERATED"; do
 		echo -n "Test of input ${attempt##*/}: "
-		base="${attempts%OUTPUTS_GENERATED}"
-		cmp -s "$attempt" "$attempt$OUTPUTS_EXPECTED"
+		base="${attempt%$OUTPUTS_GENERATED}"
+		cmp -s "$attempt" "$base""$OUTPUTS_EXPECTED"
 
 		if [ "$?" -eq 0 ]; then
 			echo  "\t\tTest passed"
-			rm attempt
+			rm "$attempt"
 		else
 			echo  "\t\tTest failed /!\\"
 		fi

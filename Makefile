@@ -22,15 +22,18 @@ CLEAN_COM   := cleaner
 .DEFAULT:
 	$(MAKE) $(MAKECMDGOALS) -C $(OBJ_FILES)
 
-.PHONY : zip test do
+.PHONY : zip test do cleantest
 zip :
 	$(MAKE) $(CLEAN_COM)
 	$(ZIP) $(ZIP_FLAGS) $(RELEASE_NAME).zip $(MAKEFILE_LIST) ||:
 	$(ZIP) $(ZIP_FLAGS) $(RELEASE_NAME).zip $(SRC_FILES) ||:
 
 
-test : do
+test :
 	cd $(TST_FILES) && $(TST_COMM)
+
+cleantest :
+	cd $(TST_FILES) && `find . -regex '.*\.gen' -delete`
 
 do :
 	$(MAKE) -C $(OBJ_FILES)
