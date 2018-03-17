@@ -11,6 +11,8 @@ LIB_FILES   := ../lib
 
 CC          := gcc
 CFLAGS      := -Wall -Wextra -pedantic -pedantic-errors -g
+CFLAGS_R    := -O3 -ansi -Wall -lm
+CFLAGS      := $(CFLAGS_R)
 
 basename    := main
 objects      = $(addsuffix .o, $(basename))
@@ -19,7 +21,7 @@ vpath %.h $(SRC_FILES):$(LIB_FILES)
 vpath %.c $(SRC_FILES):$(LIB_FILES)
 
 define compile
-	$(CC) $(CFLAGS) $(objects) -o $(PROGRAM)
+	$(CC) $(CFLAGS_R) $(objects) -o $(PROGRAM)
 endef
 
 .PHONY: wfastlist wlist wmatrix

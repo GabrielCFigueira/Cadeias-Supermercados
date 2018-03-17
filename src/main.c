@@ -32,12 +32,13 @@ void DFS_visit_aux(Graph g, int u, int v) {
 
 
 void DFS(Graph g) {
-  int V = nVertex(g);
+  int u, V;
+  V = nVertex(g);
   color = (int*) calloc(V, sizeof(int)) - 1;
   pai = (int*) calloc(V, sizeof(int)) - 1;
   d_time = (int*) calloc(V, sizeof(int)) - 1;
   f_time = (int*) calloc(V, sizeof(int)) - 1;
-  for(int u = 1; u<=V; ++u) {
+  for(u = 1; u<=V; ++u) {
     if(!color[u]) {
       DFS_visit(g, u);
     }
@@ -49,7 +50,8 @@ void DFS(Graph g) {
 
 static int visited = 0;
 static int n_scc = 0;
-static int stackPointer = -1; //Points to the first element that exists
+/* Points to the first element that exists */
+static int stackPointer = -1;
 static int * discovery;
 static int * low;
 static int * translation;
@@ -66,10 +68,10 @@ static void tarjanVisit(Graph g, int vertex);
 #define stack_contains(a) (in_stack[a])
 
 void Tarjan(Graph g) {
-  //because we really want to go [1, nVertex], we do [0, nVertex]
+  /* because we really want to go [1, nVertex], we do [0, nVertex] */
   int V = nVertex(g) + 1;
   int E = nConnection(g);
-  // the stack can't go over the number of connections in the graph
+  /* the stack can't go over the number of connections in the graph */
   stack = (int*) calloc(E, sizeof(int));
   in_stack = (int*) calloc(V, sizeof(int));
   scratch = (int*) calloc(E, sizeof(int));
@@ -83,7 +85,7 @@ void Tarjan(Graph g) {
   for(i=V; i>=0; --i)
     discovery[i] = INT_MAX;
 
-  for (int i = 1; i < V; i++)
+  for(i = 1; i < V; i++)
     if (low[i] == INT_MAX)
       tarjanVisit(g, i);
 
@@ -104,7 +106,7 @@ void tarjanVisit(Graph g, int vertex) {
 
   int v;
   discovery[vertex] = low[vertex] = visited++;
-  stack[++stackPointer] = vertex; //Push
+  stack[++stackPointer] = vertex; /*Push*/
   in_stack[vertex] = 1;
 
   doForEachAdjU(g, vertex, tarjanVisit_aux);
@@ -112,7 +114,7 @@ void tarjanVisit(Graph g, int vertex) {
   if(discovery[vertex] == low[vertex]) {
     int lowest_in_scc = vertex;
     n_scc++;
-    while(vertex != (v = stack[stackPointer--])) {
+    while(vertex != (v = stack[stackPointer--])) { /*Pop*/
       in_stack[v] = 0;
       lowest_in_scc = min(v,lowest_in_scc);
       scratch[++scratchPointer] = v;

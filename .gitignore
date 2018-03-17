@@ -4,6 +4,7 @@
 #-	Object file
 #-	Compiled header
 #-	Executables
+#-	Core dumps
 
 *.o
 
@@ -12,6 +13,8 @@
 *.out
 !tests/students-tests/*.out
 *.exe
+
+core
 
 # Project specific
 #-	Final executable

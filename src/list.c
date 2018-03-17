@@ -99,8 +99,9 @@ Graph buildGraph() {
 /* Meta function to do something with the nodes in the adjacency list
  * It goes in order of vertexes */
 void traverseGraph(Graph g, void (*func)(int, Node)){
+  int i;
   Node conn, scratchpad;
-  for(int i=1; i <= g->n_vertexes; ++i) {
+  for(i=1; i <= g->n_vertexes; ++i) {
     conn = g->adjList[i];
     while(conn != NULL) {
       scratchpad = conn;
@@ -133,8 +134,9 @@ Graph transposeGraph(const Graph g) {
 
 /* Shows that everything went fine (for debugging purposes)*/
 void showGraph(const Graph g) {
+  int i;
   Node conn;
-  for(int i=1; i <= g->n_vertexes; ++i) {
+  for(i=1; i <= g->n_vertexes; ++i) {
     printf("Vertex %d: ", i);
     conn = g->adjList[i];
     while(conn != NULL) {
@@ -167,6 +169,7 @@ void doForEachAdjU(Graph g, int u, void (*func)(Graph, int, int)) {
 
 Graph reduceGraph(Graph g, int * trans) {
 
+  int i;
   translation = trans;
 
   Graph res = (Graph) calloc(1, sizeof(struct graph));
@@ -177,7 +180,7 @@ Graph reduceGraph(Graph g, int * trans) {
 
   res->n_vertexes = nVertex(g);
 
-  for (int i = 1; i <= nVertex(g); i++)
+  for(i = 1; i <= nVertex(g); i++)
     doForEachAdjU(g, i, reduceGraph_aux);
 
   res->n_connections = n_connections;
@@ -204,7 +207,7 @@ void printSccGraph(Graph g, int nScc) {
 
   printf("%d\n%d\n", nScc, g->n_connections);
 
-  for(int i = 1; i <= nVertex(g); i++)
+  for(i = 1; i <= nVertex(g); i++)
     doForEachAdjU(g, i, printSccGraph_aux);
 }
 

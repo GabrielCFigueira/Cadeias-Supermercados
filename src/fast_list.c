@@ -40,7 +40,7 @@ int compareCon(const void *a, const void *b) {
 
 
 Graph buildGraph() {
-  int V, E, u, v;
+  int V, E, u, v, i;
   scanf("%d", &V);
   scanf("%d", &E);
 
@@ -57,16 +57,16 @@ Graph buildGraph() {
     res->offset[u]++;
   }
 
-  //Do a couting sort (implement it)
+  /*Do a couting sort (implement it)*/
   qsort(res->adjList, res->n_connections, 2*sizeof(int), compareCon);
-  for(int i=1; i<=V; ++i) {
+  for(i=1; i<=V; ++i) {
     res->offset[i]+=res->offset[i-1];
   }
 
   return res;
 }
 
-Graph transposeGraph(Graph g) { return g; } //TODO
+Graph transposeGraph(Graph g) { return g; } /*TODO*/
 
 void showGraph(const Graph g) {
   int base, max, u;
@@ -106,14 +106,14 @@ int nConnection(Graph g) { return g->n_connections; }
 
 Graph reduceGraph(Graph g, int * translation) {
 
-  int base, max, u, v, n_conns=0;
+  int base, max, u, v, n_conns=0, i;
   Graph res = (Graph) calloc(1, sizeof(struct graph));
   res->offset = (int*) calloc(nVertex(g)+1, sizeof(int));
   res->adjList = malloc(nConnection(g)* sizeof(*res->adjList));
 
   res->n_vertexes = nVertex(g);
 
-  for (int i = 1; i <= nVertex(g); i++) {
+  for (i = 1; i <= nVertex(g); i++) {
     base=g->offset[i-1];
     max=g->offset[i];
     u = translation[i];
@@ -128,9 +128,9 @@ Graph reduceGraph(Graph g, int * translation) {
   }
   res->n_connections=n_conns;
 
-  //Do a couting sort (implement it)
+  /* Do a couting sort (implement it) */
   qsort(res->adjList, res->n_connections, 2*sizeof(int), compareCon);
-  for(int i=1; i<=nVertex(g); ++i) {
+  for(i=1; i<=nVertex(g); ++i) {
     res->offset[i]+=res->offset[i-1];
   }
 
@@ -138,9 +138,9 @@ Graph reduceGraph(Graph g, int * translation) {
 }
 
 void printSccGraph(Graph g, int nScc) {
-
+  int u;
   printf("%d\n%d\n", nScc, nConnection(g));
-  for(int u=1; u<=nVertex(g); ++u)
+  for(u=1; u<=nVertex(g); ++u)
     doForEachAdjU(g, u, printCon);
 
 }

@@ -24,7 +24,7 @@ Graph buildGraph() {
   scanf("%d", &M);
 
   Graph res = (Graph) calloc(1, sizeof(struct graph));
-  res->data = (int*) calloc((N+1)*(N+1), sizeof(int)); // Allocating +2N
+  res->data = (int*) calloc((N+1)*(N+1), sizeof(int)); /*Allocating +2N+1*/
 
   res->n_vertexes = N;
   res->n_connections = M;
@@ -38,8 +38,8 @@ Graph buildGraph() {
 
 }
 
-// To operate on a transposed graph, define the function that receives
-// the same inputs that the normal
+/* To operate on a transposed graph, define the function that receives
+   the same inputs that the normal */
 Graph  transposeGraph(Graph g) {
   return g;
 }
@@ -51,14 +51,15 @@ void freeGraph(Graph g) {
 }
 
 void doForEachAdjU(Graph g, int u, void (*func)(Graph, int, int)) {
+  int i;
   int base = g->n_vertexes*u;
-  for(int i=1; i <= g->n_vertexes; ++i) {
+  for(i=1; i <= g->n_vertexes; ++i) {
     if(g->data[base+i])
       func(g, u, i);
   }
 }
 
-int nVertex(Graph g) { return g->n_vertexes; } //TODO: Macro these
+int nVertex(Graph g) { return g->n_vertexes; } /*TODO: Macro these*/
 int nConnection(Graph g) { return g->n_connections; }
 
 /* Shows that everything went fine (for debugging purposes)*/
@@ -81,7 +82,7 @@ Graph reduceGraph(Graph g, int * translation) {
   int i, j, u, v, base;
 
   Graph res = (Graph) calloc(1, sizeof(struct graph));
-  res->data = (int*) calloc((nVertex(g)+1)*(nVertex(g)+1), sizeof(int)); // Allocating +2N
+  res->data = (int*) calloc((nVertex(g)+1)*(nVertex(g)+1), sizeof(int));
 
   res->n_vertexes = nVertex(g);
   res->n_connections = 0;
@@ -105,8 +106,9 @@ Graph reduceGraph(Graph g, int * translation) {
 
 void printSccGraph(Graph g, int nScc) {
 
+  int u;
   printf("%d\n%d\n", nScc, nConnection(g));
-  for(int u=1; u<=nVertex(g); ++u)
+  for(u=1; u<=nVertex(g); ++u)
     doForEachAdjU(g, u, printCon);
 
 }
