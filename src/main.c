@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <limits.h>
 #include <string.h>
+#include <stdio.h>
 #include "adj.h"
 
 
@@ -80,9 +81,9 @@ void Tarjan(Graph g) {
   low = (int*) malloc(sizeof(int)*V);
 
   int i;
-  for(i=V; i>=0; --i)
+  for(i=1; i<V; i++)
     low[i] = INT_MAX;
-  for(i=V; i>=0; --i)
+  for(i=1; i<V; i++)
     discovery[i] = INT_MAX;
 
   for(i = 1; i < V; i++)
@@ -124,6 +125,7 @@ void tarjanVisit(Graph g, int vertex) {
     while(0 != (v=scratch[scratchPointer--])) {
       translation[v] = lowest_in_scc;
     }
+    scratchPointer++; /*temporary solution*/
   }
 }
 
