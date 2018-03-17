@@ -65,7 +65,7 @@ int insertOrderlyInAdjList(Node * adjList, int id) {
 
   else if(conn->id > id) {
     *adjList = new;
-    new->next = conn->next;
+    new->next = conn;
   }
 
   else {
