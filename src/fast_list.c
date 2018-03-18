@@ -19,6 +19,9 @@ struct graph {
 static int compareCon(const void *a, const void *b);
 static void printCon(Graph g, int u, int v);
 
+static int lastU = 0;
+static int lastV = 0;
+
 int compareCon(const void *a, const void *b) {
   int *first_edge = (int*) a;
   int *sec_edge = (int*) b;
@@ -148,6 +151,9 @@ void printSccGraph(Graph g, int nScc) {
 
 void printCon(Graph g, int u, int v) {
   (void) g;
-  printf("%d %d\n", u, v);
+  if(u != lastU || v != lastV) {
+    printf("%d %d\n", u, v);
+    lastU = u;
+    lastV = v;
+  }
 }
-
