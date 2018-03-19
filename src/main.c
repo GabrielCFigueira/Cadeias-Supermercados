@@ -71,7 +71,6 @@ static void tarjanVisit(Graph g, int vertex);
 void Tarjan(Graph g) {
   /* because we really want to go [1, nVertex], we do [0, nVertex] */
   int V = nVertex(g) + 1;
-  int E = nConnection(g);
   /* the stack can't go over the number of vertexes in the graph */
   stack = (int*) calloc(V, sizeof(int));
   in_stack = (int*) calloc(V, sizeof(int));
