@@ -19,9 +19,6 @@ struct graph {
 static int compareCon(const void *a, const void *b);
 static void printCon(Graph g, int u, int v);
 
-static int lastU = 0;
-static int lastV = 0;
-
 int compareCon(const void *a, const void *b) {
   int *first_edge = (int*) a;
   int *sec_edge = (int*) b;
@@ -109,30 +106,44 @@ int nConnection(Graph g) { return g->n_connections; }
 
 Graph reduceGraph(Graph g, int * translation) {
 
-  int base, max, u, v, n_conns=0, i;
+  int u, v, n_conns=0, i, j, old_u, old_v;
   Graph res = (Graph) calloc(1, sizeof(struct graph));
   res->offset = (int*) calloc(nVertex(g)+1, sizeof(int));
   res->adjList = malloc(nConnection(g)* sizeof(*res->adjList));
 
   res->n_vertexes = nVertex(g);
 
-  for (i = 1; i <= nVertex(g); i++) {
-    base=g->offset[i-1];
-    max=g->offset[i];
-    u = translation[i];
-    while(base < max) {
-      v = translation[g->adjList[base][1]];
-      if(u != v) {
-        res->adjList[n_conns][0]=u; res->adjList[n_conns][1]=v;
-        res->offset[u]++; n_conns++;
-      }
-      base++;
+  j=0;
+  for (i = 0; i < nConnection(g); i++) {
+    u=translation[g->adjList[i][0]];
+    v=translation[g->adjList[i][1]];
+    if(u != v) {
+      g->adjList[j][0]=u; g->adjList[j][1]=v;
+      res->offset[u]++; j++;
     }
   }
-  res->n_connections=n_conns;
 
   /* Do a couting sort (implement it) */
-  qsort(res->adjList, res->n_connections, 2*sizeof(int), compareCon);
+  qsort(g->adjList, j, 2*sizeof(int), compareCon);
+
+  old_u = old_v = 0;
+  for(i=0; i < j; ++i) {
+    u=g->adjList[i][0];
+    v=g->adjList[i][1];
+    if(v!=old_v || u!=old_u) {
+      res->adjList[n_conns][0]=u;
+      res->adjList[n_conns][1]=v;
+      old_u=u;
+      old_v=v;
+      n_conns++;
+    } else {
+      res->offset[u]--;
+    }
+  }
+
+
+  res->n_connections=n_conns;
+
   for(i=1; i<=nVertex(g); ++i) {
     res->offset[i]+=res->offset[i-1];
   }
@@ -151,9 +162,5 @@ void printSccGraph(Graph g, int nScc) {
 
 void printCon(Graph g, int u, int v) {
   (void) g;
-  if(u != lastU || v != lastV) {
-    printf("%d %d\n", u, v);
-    lastU = u;
-    lastV = v;
-  }
+  printf("%d %d\n", u, v);
 }

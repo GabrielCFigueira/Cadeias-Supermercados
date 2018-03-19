@@ -11,7 +11,8 @@ LIB_FILES   := ../lib
 
 CC          := gcc
 CFLAGS      := -Wall -Wextra -pedantic -pedantic-errors -g
-CFLAGS_R    := -O3 -ansi -Wall -lm
+CFLAGS_R    := -O3 -ansi -Wall
+LDFLAGS     := -lm
 CFLAGS      := $(CFLAGS_R)
 
 basename    := main
@@ -21,10 +22,14 @@ vpath %.h $(SRC_FILES):$(LIB_FILES)
 vpath %.c $(SRC_FILES):$(LIB_FILES)
 
 define compile
-	$(CC) $(CFLAGS_R) $(objects) -o $(PROGRAM)
+	$(CC) $(CFLAGS) $(objects) -o $(PROGRAM) $(LDFLAGS)
 endef
 
-.PHONY: wfastlist wlist wmatrix
+.PHONY: mooshak wfastlist wlist wmatrix
+
+mooshak     : basename = mooshak
+mooshak     : mooshak.o
+	$(compile)
 
 wfastlist   : basename += fast_list
 wfastlist   : $(objects) fast_list.o
@@ -43,6 +48,7 @@ $(PROGRAM) : $(objects)
 
 
 # Source code
+mooshak.o      :
 main.o         : adj.h
 list.o         : adj.h
 matrix.o       : adj.h
