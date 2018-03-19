@@ -44,7 +44,7 @@ int (*graphSort(int (*adjList)[2], int *count, int n_conns, int n_vertexes))[2] 
   aux_count--;
 
   for(i=1; i<=n_vertexes; ++i) {
-    if(count[i]) {
+    if(count[i] > 1) {
       qsort(newAdj+aux_count[i-1],count[i],2*sizeof(int),compare2Con);
     }
   }

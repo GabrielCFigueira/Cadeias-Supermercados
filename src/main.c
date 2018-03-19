@@ -72,10 +72,10 @@ void Tarjan(Graph g) {
   /* because we really want to go [1, nVertex], we do [0, nVertex] */
   int V = nVertex(g) + 1;
   int E = nConnection(g);
-  /* the stack can't go over the number of connections in the graph */
-  stack = (int*) calloc(E, sizeof(int));
+  /* the stack can't go over the number of vertexes in the graph */
+  stack = (int*) calloc(V, sizeof(int));
   in_stack = (int*) calloc(V, sizeof(int));
-  scratch = (int*) calloc(E, sizeof(int));
+  scratch = (int*) calloc(V, sizeof(int));
   translation = (int*) calloc(V, sizeof(int));
   discovery = (int*) malloc(sizeof(int)*V);
   low = (int*) malloc(sizeof(int)*V);
@@ -122,10 +122,10 @@ void tarjanVisit(Graph g, int vertex) {
     }
     scratch[++scratchPointer] = vertex;
     in_stack[vertex] = 0;
-    while(0 != (v=scratch[scratchPointer--])) {
-      translation[v] = lowest_in_scc;
+    while(0 != scratchPointer) {
+      translation[scratch[scratchPointer]] = lowest_in_scc;
+      scratchPointer--;
     }
-    scratchPointer++; /*temporary solution*/
   }
 }
 
