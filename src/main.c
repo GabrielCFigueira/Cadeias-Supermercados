@@ -12,7 +12,8 @@ static int stackPointer = -1;
 static int * discovery;
 static int * low;
 static int * translation;
-static int * scratch; static int scratchPointer=0;
+/*static int * scratch; */
+static int SCCPointer=0;
 static int * stack;
 static int * in_stack;
 
@@ -30,7 +31,7 @@ void Tarjan(Graph g) {
   /* the stack can't go over the number of vertexes in the graph */
   stack = (int*) calloc(V, sizeof(int));
   in_stack = (int*) calloc(V, sizeof(int));
-  scratch = (int*) calloc(V, sizeof(int));
+  /*scratch = (int*) calloc(V, sizeof(int));*/
   translation = (int*) calloc(V, sizeof(int));
   discovery = (int*) malloc(sizeof(int)*V);
   low = (int*) malloc(sizeof(int)*V);
@@ -63,6 +64,7 @@ void tarjanVisit(Graph g, int vertex) {
   int v;
   discovery[vertex] = low[vertex] = visited++;
   stack[++stackPointer] = vertex; /*Push*/
+  ++SCCPointer;
   in_stack[vertex] = 1;
 
   doForEachAdjU(g, vertex, tarjanVisit_aux);
@@ -73,13 +75,11 @@ void tarjanVisit(Graph g, int vertex) {
     while(vertex != (v = stack[stackPointer--])) { /*Pop*/
       in_stack[v] = 0;
       lowest_in_scc = min(v,lowest_in_scc);
-      scratch[++scratchPointer] = v;
     }
-    scratch[++scratchPointer] = vertex;
     in_stack[vertex] = 0;
-    while(0 != scratchPointer) {
-      translation[scratch[scratchPointer]] = lowest_in_scc;
-      scratchPointer--;
+    while(stackPointer != SCCPointer) {
+      translation[stack[SCCPointer]] = lowest_in_scc;
+      SCCPointer--;
     }
   }
 }
@@ -88,7 +88,7 @@ void tarjanVisit(Graph g, int vertex) {
 void freeTarjan() {
   free(stack);
   free(in_stack);
-  free(scratch);
+  /*free(scratch);*/
   free(translation);
   free(discovery);
   free(low);
