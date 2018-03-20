@@ -97,9 +97,9 @@ void freeTarjan() {
 
 int main() {
   Graph initial, reduced;
-  Graph initial = buildGraph();
+  initial = buildGraph();
   Tarjan(initial);
-  reduced = reduceGraph(inital, translation);
+  reduced = reduceGraph(initial, translation);
   printSccGraph(reduced, n_scc);
   freeGraph(reduced);
   freeTarjan();

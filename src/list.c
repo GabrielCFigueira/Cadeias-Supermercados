@@ -26,7 +26,8 @@ static Node * adjListAuxPointer;
 static int * translation;
 static int n_connections;
 
-static void freeNode(int from, Node to);
+static void freeNode(Node to);
+static void freeNodeTraverse(int from, Node to);
 static void traverseGraph(Graph g, void (*func)(int, Node));
 static void invertConnection(int from, Node to);
 static void insertInAdjList(Node * adjList, int id);
@@ -38,10 +39,15 @@ int nConnection(Graph g) { return g->n_connections; }
 
 
 /* frees memory associated with a node*/
-void freeNode(int i, Node n) {
+void freeNode(Node n) {
+  free(n);
+}
+
+void freeNodeTraverse(int i, Node n) {
   (void) i;
   free(n);
 }
+
 
 
 /* inserts a new node at the beggining of the adjacency list */
@@ -166,7 +172,7 @@ void showGraph(const Graph g) {
 
 
 void freeGraph(Graph g) {
-  traverseGraph(g, freeNode);
+  traverseGraph(g, freeNodeTraverse);
   free(++(g->adjList));
   free(g);
 }
