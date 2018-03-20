@@ -101,6 +101,7 @@ Graph reduceGraph(Graph g, int * translation) {
     }
   }
 
+  freeGraph(g);
   return res;
 }
 

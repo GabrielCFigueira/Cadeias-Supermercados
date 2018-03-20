@@ -176,6 +176,7 @@ Graph reduceGraph(Graph g, int * translation) {
     res->offset[i]+=res->offset[i-1];
   }
 
+  freeGraph(g);
   return res;
 }
 

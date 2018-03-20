@@ -10,7 +10,6 @@
 #include "adj.h"
 
 
-
 typedef struct node {
   struct node * next;
   int id;
@@ -72,10 +71,14 @@ int insertOrderlyInAdjList(Node * adjList, int id) {
 
     while(conn->next != NULL && conn->next->id < id)
       conn = conn->next;
-    if(conn->id == id || (conn->next != NULL && conn->next->id == id))
+
+    if(conn->id == id || (conn->next != NULL && conn->next->id == id)) {
+      freeNode(new);
       return 0;
-    new->next = conn->next;
-    conn->next = new;
+    } else {
+      new->next = conn->next;
+      conn->next = new;
+    }
 
   }
 
@@ -198,6 +201,7 @@ Graph reduceGraph(Graph g, int * trans) {
 
   res->n_connections = n_connections;
 
+  freeGraph(g);
   return res;
 }
 
