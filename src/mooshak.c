@@ -29,7 +29,8 @@ int (*graphSort(int (*adjList)[2], int *count, int n_conns, int n_vertexes))[2] 
    * we can have a -1 position of 0, because, during the positioning,
    * the offsets will shift to the left, and so we will use that extra space
    * to go back to a normal offset list.*/
-  int * aux_count = (int*) calloc(n_vertexes+2, sizeof(int));
+  int * aux_count = (int*) malloc((n_vertexes+2)*sizeof(int));
+  aux_count[0]=0;
   aux_count++;
   memcpy(aux_count, count, (n_vertexes+1)*sizeof(int));
 
