@@ -54,18 +54,11 @@ int (*graphSort(int (*adjList)[2], int *count, int n_conns, int n_vertexes))[2] 
   return newAdj;
 }
 
-
-
 int compare2Con(const void *a, const void *b) {
   int *first_edge = (int*) a;
   int *sec_edge = (int*) b;
- if (first_edge[1] < sec_edge[1]) {
-    return -1;
-  }
-  if(first_edge[1] > sec_edge[1]) {
-    return 1;
-  }
-  return 0;
+
+  return first_edge[1] - sec_edge[1];
 
 }
 
