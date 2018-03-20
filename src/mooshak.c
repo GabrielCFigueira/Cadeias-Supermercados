@@ -3,16 +3,18 @@
 #include <string.h>
 #include <stdio.h>
 
+/*fast_list.c*/
 
-
-
-typedef struct graph {
+typedef struct graph * Graph;
+struct graph {
   int n_vertexes;
   int n_connections;
   int (*adjList)[2];
   int *offset;
-} * Graph;
+} ;
 
+#define nVertex(g) (g->n_vertexes)
+#define nConnection(g) (g->n_connections)
 
 
 
@@ -27,7 +29,7 @@ int (*graphSort(int (*adjList)[2], int *count, int n_conns, int n_vertexes))[2] 
    * we can have a -1 position of 0, because, during the positioning,
    * the offsets will shift to the left, and so we will use that extra space
    * to go back to a normal offset list.*/
-  int * aux_count = (int*) malloc((n_vertexes+2)*sizeof(int));
+  int * aux_count = (int*) calloc(n_vertexes+2, sizeof(int));
   aux_count++;
   memcpy(aux_count, count, (n_vertexes+1)*sizeof(int));
 
@@ -53,18 +55,11 @@ int (*graphSort(int (*adjList)[2], int *count, int n_conns, int n_vertexes))[2] 
   return newAdj;
 }
 
-
-
 int compare2Con(const void *a, const void *b) {
   int *first_edge = (int*) a;
   int *sec_edge = (int*) b;
- if (first_edge[1] < sec_edge[1]) {
-    return -1;
-  }
-  if(first_edge[1] > sec_edge[1]) {
-    return 1;
-  }
-  return 0;
+
+  return first_edge[1] - sec_edge[1];
 
 }
 
@@ -95,23 +90,6 @@ Graph buildGraph() {
   return res;
 }
 
-Graph transposeGraph(Graph g) { return g; } /*TODO*/
-
-void showGraph(const Graph g) {
-  int base, max, u;
-  max = 0;
-  for(u=1; u <= g->n_vertexes; ++u) {
-    base=max;
-    max=g->offset[u];
-    printf("Vertex %d: ", u);
-    while(base < max) {
-        printf("%d ", g->adjList[base][1]);
-        base++;
-      }
-    putchar('\n');
-    }
-}
-
 void freeGraph(Graph g) {
   free(g->adjList);
   free(g->offset);
@@ -127,10 +105,6 @@ void doForEachAdjU(Graph g, int u, void (*func)(Graph, int, int)) {
     base++;
   }
 }
-
-
-int nVertex(Graph g) { return g->n_vertexes; }
-int nConnection(Graph g) { return g->n_connections; }
 
 
 Graph reduceGraph(Graph g, int * translation) {
@@ -191,9 +165,7 @@ void printSccGraph(Graph g, int nScc) {
 
 
 
-
-
-
+/*Tarjan algorithm*/
 
 static int visited = 0;
 static int n_scc = 0;
@@ -202,8 +174,6 @@ static int stackPointer = -1;
 static int * discovery;
 static int * low;
 static int * translation;
-/*static int * scratch; */
-static int SCCPointer=0;
 static int * stack;
 static int * in_stack;
 
@@ -221,7 +191,6 @@ void Tarjan(Graph g) {
   /* the stack can't go over the number of vertexes in the graph */
   stack = (int*) calloc(V, sizeof(int));
   in_stack = (int*) calloc(V, sizeof(int));
-  /*scratch = (int*) calloc(V, sizeof(int));*/
   translation = (int*) calloc(V, sizeof(int));
   discovery = (int*) malloc(sizeof(int)*V);
   low = (int*) malloc(sizeof(int)*V);
@@ -251,25 +220,25 @@ void tarjanVisit_aux(Graph g, int from, int to) {
 
 void tarjanVisit(Graph g, int vertex) {
 
-  int v;
   discovery[vertex] = low[vertex] = visited++;
   stack[++stackPointer] = vertex; /*Push*/
-  ++SCCPointer;
   in_stack[vertex] = 1;
 
   doForEachAdjU(g, vertex, tarjanVisit_aux);
 
   if(discovery[vertex] == low[vertex]) {
-    int lowest_in_scc = vertex;
+    int v, lowest_in_scc, sccStackTop;
+    sccStackTop=stackPointer;
+    lowest_in_scc = vertex;
     n_scc++;
     while(vertex != (v = stack[stackPointer--])) { /*Pop*/
       in_stack[v] = 0;
       lowest_in_scc = min(v,lowest_in_scc);
     }
     in_stack[vertex] = 0;
-    while(stackPointer != SCCPointer) {
-      translation[stack[SCCPointer]] = lowest_in_scc;
-      SCCPointer--;
+    while(stackPointer != sccStackTop) {
+      translation[stack[sccStackTop]] = lowest_in_scc;
+      sccStackTop--;
     }
   }
 }
@@ -278,24 +247,19 @@ void tarjanVisit(Graph g, int vertex) {
 void freeTarjan() {
   free(stack);
   free(in_stack);
-  /*free(scratch);*/
   free(translation);
   free(discovery);
   free(low);
 }
 
 
-
 int main() {
-  Graph ola = buildGraph();
-  Tarjan(ola);
-  printSccGraph(reduceGraph(ola, translation), n_scc);
+  Graph initial, reduced;
+  initial = buildGraph();
+  Tarjan(initial);
+  reduced = reduceGraph(initial, translation);
+  printSccGraph(reduced, n_scc);
+  freeGraph(reduced);
   freeTarjan();
-  /*DFS(ola);
-  freeGraph(ola);
-  free(color+1);
-  free(pai+1);
-  free(f_time+1);
-  free(d_time+1);*/
   return 0;
 }
