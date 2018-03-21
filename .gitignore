@@ -18,6 +18,8 @@ core
 
 # Project specific
 #-	Final executable
-#-	Test resukt
+#-	Test results
+#-	Final analysis in pdf
 asa.out
 tests/students-tests/*.gen
+docs/relatorio-al040.pdf

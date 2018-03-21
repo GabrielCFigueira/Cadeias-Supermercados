@@ -17,12 +17,14 @@ ZIP_FLAGS   := -ur --quiet
 
 CLEAN_COM   := cleaner
 
+REPORT_NAME := docs/relatorio-al040
+
 .DEFAULT_GOAL := .DEFAULT
 
 .DEFAULT:
 	$(MAKE) $(MAKECMDGOALS) -C $(OBJ_FILES)
 
-.PHONY : zip test do cleantest
+.PHONY : zip test do cleantest report
 zip :
 	$(MAKE) $(CLEAN_COM)
 	$(ZIP) $(ZIP_FLAGS) $(RELEASE_NAME).zip $(MAKEFILE_LIST) ||:
@@ -37,3 +39,6 @@ cleantest :
 
 do :
 	$(MAKE) -C $(OBJ_FILES)
+
+report :
+	 pandoc -f markdown -t latex $(REPORT_NAME).md -o $(REPORT_NAME).pdf
