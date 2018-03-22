@@ -44,6 +44,18 @@ inteiros (*int[]*), ao qual se junta outro *array*, de tamanho do número de
 vértices, que guarda em cada posição um inteiro correspondente ao *offset*
 das suas ligações no primeiro array.
 
-## Análise teórica
+## Análise Teórica
+
+A implementação do algoritmo Tarjan tem complexidade temporal O(V + E) e
+complexidade espacial O(V), em que V é o número de vértices e E o número de
+arcos.
+
+As complexidades de outros passos na solução são estes:
+
+|                       | Tarjan | Criar Grafo | Ordenar Ligações | Destruir Grafo
+| ----------------------|        |             |                  |
+| Complexidade Temporal |        |             |                  |
+| ----------------------|        |             |                  |
+| Complexidade Espacial |        |             |                  |
 
 ## Análise prática
