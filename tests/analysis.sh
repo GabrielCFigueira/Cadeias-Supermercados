@@ -1,4 +1,10 @@
 #!/bin/sh
+# analysis.sh
+# ASA 2018
+# Gabriel Figueira, Rafael Andrade
+# P1 (Sr. Joao Caracol)
+
+
 
 set -e
 
@@ -6,11 +12,12 @@ ORIG_DIR=$(pwd)
 cd $(dirname "$0")
 
 EXECUTABLE="../asa.out"
-N_RUNS=20
-N_EXCLUDE=2
+N_RUNS=5
+N_EXCLUDE=1
 TMP_FILE=$(mktemp)
 DEFAULT_CSV="../test.csv"
 DEFAULT_DIR="./students-tests"
+DEFAULT_GEN="./gerador"
 
 memory(){
   if [ "$1" ]  && [ -f "$1" ] ; then
@@ -29,7 +36,6 @@ run_time(){
   fi
 }
 
-
 csv_line(){
 
   if [ "$1" ] && [ -f "$1" ] ; then
@@ -47,5 +53,33 @@ csv_file(){
   done >"$DEFAULT_CSV"
 }
 
+
+random_tests() {
+
+  echo "Starting small random tests" >&2
+  local F=`mktemp`
+  for i in $(seq 10); do
+    printf "Test number %d\n" "$i" >&2
+    local N_SCC=`shuf -i 100-1000 -n1`
+    local N_V=`shuf -i 1000-100000 -n1`
+    local N_E=$((`shuf -i 2-10 -n1` * $N_V))
+    local SEED=`shuf -i 0-65535 -n1`
+    $DEFAULT_GEN $N_V $N_E $N_SCC 1 1000 $SEED >$F
+    csv_line "$F"
+  done >>"$DEFAULT_CSV"
+  echo "Starting big random tests" >&2
+  for i in $(seq 10); do
+    printf "Test number %d\n" "$i" >&2
+    local N_SCC=`shuf -i 1000-10000 -n1`
+    local N_V=`shuf -i 10000-1000000 -n1`
+    local N_E=$((`shuf -i 2-10 -n1` * $N_V))
+    $DEFAULT_GEN $N_V $N_E $N_SCC 1 1000 $SEED >$F
+    csv_line "$F"
+  done >>"$DEFAULT_CSV"
+
+}
+
+
 csv_file
+random_tests
 cd "$ORIG_DIR"
