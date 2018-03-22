@@ -26,20 +26,25 @@ for sorting purposes */
 void graphSort(int (*adjList)[2], int *count, int n_conns, int n_vertexes) {
 
 
+  /* offset goes [0, V]*/
   int * offset = (int*) calloc (1, (n_vertexes + 1)*sizeof(int));
+  /* goes [0, E-1]*/
   int (*newAdj)[2] = malloc(n_conns*sizeof(*newAdj));
 
   int i;
   for(i = 0; i < n_conns; i++)
-    offset[adjList[i][1] + 1]++;
+    offset[adjList[i][1]]++;
 
   for(i = 1; i <= n_vertexes; i++)
     offset[i] += offset[i - 1];
 
+  --offset;
   for(i = 0; i < n_conns; i++) {
     newAdj[offset[adjList[i][1]]][1] = adjList[i][1];
-    newAdj[offset[adjList[i][1]]++][0] = adjList[i][0];
+    newAdj[offset[adjList[i][1]]][0] = adjList[i][0];
+    offset[adjList[i][1]]++;
   }
+  ++offset;
 
 
   memcpy(offset, count, (n_vertexes+1)*sizeof(int));
@@ -47,12 +52,16 @@ void graphSort(int (*adjList)[2], int *count, int n_conns, int n_vertexes) {
   for(i = 1; i <= n_vertexes; i++)
     offset[i] += offset[i - 1];
 
+  --offset;
   for(i = 0; i < n_conns; i++) {
     adjList[offset[newAdj[i][0]]][0] = newAdj[i][0];
-    adjList[offset[newAdj[i][0]]++][1] = newAdj[i][1];
+    adjList[offset[newAdj[i][0]]][1] = newAdj[i][1];
+    offset[newAdj[i][0]]++;
   }
+  ++offset;
 
   free(offset);
+  free(newAdj);
 }
 
 
