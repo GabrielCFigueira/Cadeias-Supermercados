@@ -2,11 +2,14 @@
 
 set -e
 
+ORIG_DIR=$(pwd)
+cd $(dirname "$0")
+
 EXECUTABLE="../asa.out"
 N_RUNS=20
 N_EXCLUDE=2
 TMP_FILE=$(mktemp)
-DEFAULT_CSV="test.csv"
+DEFAULT_CSV="../test.csv"
 DEFAULT_DIR="./students-tests"
 
 memory(){
@@ -45,3 +48,4 @@ csv_file(){
 }
 
 csv_file
+cd "$ORIG_DIR"

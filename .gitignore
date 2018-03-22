@@ -20,6 +20,8 @@ core
 #-	Final executable
 #-	Test results
 #-	Final analysis in pdf
+#-	CSV analysis of results
 asa.out
 tests/students-tests/*.gen
 docs/relatorio-al040.pdf
+*.csv

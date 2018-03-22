@@ -11,6 +11,7 @@ OBJ_FILES   := build
 SRC_FILES   := src
 TST_FILES   := tests
 TST_COMM    := ./run_tests.sh
+ANA_COMM    := ./tests/analysis.sh
 
 ZIP         := zip
 ZIP_FLAGS   := -ur --quiet
@@ -24,7 +25,7 @@ REPORT_NAME := docs/relatorio-al040
 .DEFAULT:
 	$(MAKE) $(MAKECMDGOALS) -C $(OBJ_FILES)
 
-.PHONY : zip test do cleantest report
+.PHONY : zip test do cleantest report analysis
 zip :
 	$(MAKE) $(CLEAN_COM)
 	$(ZIP) $(ZIP_FLAGS) $(RELEASE_NAME).zip $(MAKEFILE_LIST) ||:
@@ -41,4 +42,7 @@ do :
 	$(MAKE) -C $(OBJ_FILES)
 
 report :
-	 pandoc -f markdown -t latex $(REPORT_NAME).md -o $(REPORT_NAME).pdf
+	pandoc -f markdown -t latex $(REPORT_NAME).md -o $(REPORT_NAME).pdf
+
+analysis :
+	$(ANA_COMM)
