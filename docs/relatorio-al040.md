@@ -27,14 +27,6 @@ sub-redes são as pontes entre SCCs.
 [^SCC]: Daqui para a frente, em vez de "componente fortemente ligada" será
 usada a sigla inglesa *Strongly Connected Component* (SCC).
 
-O problema reduz-se então a:
-
-  - Encontrar todas as SCCs presentes no grafo, e contar
-  - Identificar, para cada SCC, qual o menor dos identificadores
-  - Eliminar os arcos redundantes (inter-SCC) e os que ligam vértices
-    pertencentes ao mesmo SCC, e contar quantos arcos restantes existem
-  - Imprimir de forma ordenada os ditos arcos
-
 
 Em termos teóricos, para representar o grafo, foi usada uma lista de
 adjacências, e utilizámos o algoritmo de Tarjan para identificar SCCs.
@@ -44,18 +36,29 @@ inteiros (*int[]*), ao qual se junta outro *array*, de tamanho do número de
 vértices, que guarda em cada posição um inteiro correspondente ao *offset*
 das suas ligações no primeiro array.
 
+
+A solução pode ser descrita em:
+
+  - Ler o *input*, ordenar as ligações e criar o grafo
+  - Aplicar o algoritmo de Tarjan, obtendo assim as SCC
+  - Identificar, para cada SCC, qual o menor dos identificadores
+  - Eliminar os arcos redundantes (inter-SCC) e os que ligam vértices
+    pertencentes ao mesmo SCC, e contar quantos arcos restantes existem
+  - Ordenar e imprimir os ditos arcos
+
+
+
 ## Análise Teórica
 
-A implementação do algoritmo Tarjan tem complexidade temporal O(V + E) e
+O algoritmo de Tarjan tem, teoricamente, complexidade temporal O(V + E) e
 complexidade espacial O(V), em que V é o número de vértices e E o número de
 arcos.
 
 As complexidades de outros passos na solução são estes:
 
-|                       | Tarjan | Criar Grafo | Ordenar Ligações | Destruir Grafo
-| ----------------------|        |             |                  |
-| Complexidade Temporal |        |             |                  |
-| ----------------------|        |             |                  |
-| Complexidade Espacial |        |             |                  |
+|                        | Tarjan    | Criar Grafo | Ordenar Ligações | Destruir Grafo |
+|:----------------------:|:---------:|:-----------:|:----------------:|:--------------:|
+| Complexidade Temporal  |  O(V + E) |  O(V + E)   |      O(VElogE)   | O(1)           |
+| Complexidade Espacial  |  O(V)     |  O(E !?)    |    O(V + E)      | O(1)           |
 
 ## Análise prática
