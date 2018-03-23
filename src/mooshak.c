@@ -35,10 +35,6 @@ struct graph {
 #define nConnection(g) (g->n_connections)
 
 
-static void graphSort(int (*adjList)[2], int *count, int n_conns, int n_vertex);
-
-
-
 /* sorts a 2xn_conns array, with the first line being the most significant
  * for sorting purposes
  * this sort used radixSort (lsd), and couting sort to sort each array
