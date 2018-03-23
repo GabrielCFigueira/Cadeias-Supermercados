@@ -1,5 +1,5 @@
 /*
- * fast_list.c
+ * mooshak.c
  * ASA 2018
  * Gabriel Figueira, Rafael Andrade
  * P1 (Sr. Joao Caracol)
@@ -95,9 +95,7 @@ Graph buildGraph() {
   scanf("%d", &E); /* number of connections */
 
   Graph res = (Graph) calloc(1, sizeof(struct graph));
-  res->offset = (int*) calloc(V+1, sizeof(int)); /* this offset list will make
-accessing specific elements O(1) */
-
+  res->offset = (int*) calloc(V+1, sizeof(int));
   res->adjList = malloc(E* sizeof(*res->adjList));
 
   res->n_vertexes = V;
@@ -125,7 +123,7 @@ void freeGraph(Graph g) {
   free(g);
 }
 
-/* applies the function func to all elements of the graph */
+/* applies the function func to all vertexes adjacent to vertex u */
 void doForEachAdjU(Graph g, int u, void (*func)(Graph, int, int)) {
   int base, max;
   base=g->offset[u-1];
@@ -137,7 +135,7 @@ void doForEachAdjU(Graph g, int u, void (*func)(Graph, int, int)) {
 }
 
 
-/* removes redundant connections and reduces the Graph to its SCC*/
+/* removes redundant connections and reduces the Graph to its SCCs */
 Graph reduceGraph(Graph g, int * translation) {
 
   int u, v, n_conns=0, i, j, old_u, old_v;
@@ -149,7 +147,7 @@ Graph reduceGraph(Graph g, int * translation) {
 
 
   /* translates the vertexes to the minimum in its respective SCC, and removes
-  repeated vertexes */
+     duplicates */
   j=0;
   for (i = 0; i < nConnection(g); i++) {
     u=translation[g->adjList[i][0]];
@@ -206,7 +204,6 @@ void printSccGraph(Graph g, int nScc) {
 /*-------------------------------------------------------------------------*/
 static int visited = 0;
 static int n_scc = 0;
-/* Points to the first element that exists */
 static int stackPointer = -1;
 static int * discovery;
 static int * low;
@@ -267,12 +264,12 @@ void tarjanVisit(Graph g, int vertex) {
   doForEachAdjU(g, vertex, tarjanVisit_aux);
 
 
-  
   if(discovery[vertex] == low[vertex]) {
     int v, lowest_in_scc, sccStackTop;
     sccStackTop=stackPointer;
     lowest_in_scc = vertex;
     n_scc++;
+    /* get the lowest identifier in SCC */
     while(vertex != (v = stack[stackPointer--])) { /*Pop*/
       in_stack[v] = 0;
       lowest_in_scc = min(v,lowest_in_scc);
@@ -293,7 +290,6 @@ void freeTarjan() {
   free(discovery);
   free(low);
 }
-
 
 
 int main() {
