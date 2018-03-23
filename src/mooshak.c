@@ -1,9 +1,16 @@
+/*
+ * fast_list.c
+ * ASA 2018
+ * Gabriel Figueira, Rafael Andrade
+ * P1 (Sr. Joao Caracol)
+ */
+
 #include <stdlib.h>
 #include <limits.h>
 #include <string.h>
 #include <stdio.h>
 
-/*fast_list.c*/
+
 
 typedef struct graph * Graph;
 struct graph {
@@ -32,6 +39,7 @@ void graphSort(int (*adjList)[2], int *count, int n_conns, int n_vertexes) {
   int (*newAdj)[2] = malloc(n_conns*sizeof(*newAdj));
 
   int i;
+
   for(i = 0; i < n_conns; i++)
     offset[adjList[i][1]]++;
 
@@ -66,25 +74,29 @@ void graphSort(int (*adjList)[2], int *count, int n_conns, int n_vertexes) {
 
 
 
-
+/*function which reads from input and builds a Graph */
 Graph buildGraph() {
+
   int V, E, u, v, i;
-  scanf("%d", &V);
-  scanf("%d", &E);
+  scanf("%d", &V); /* number of vertexes */
+  scanf("%d", &E); /* number of connections */
 
   Graph res = (Graph) calloc(1, sizeof(struct graph));
-  res->offset = (int*) calloc(V+1, sizeof(int));
+  res->offset = (int*) calloc(V+1, sizeof(int)); /* this offset list will make
+accessing specific elements O(1) */
+
   res->adjList = malloc(E* sizeof(*res->adjList));
 
   res->n_vertexes = V;
   res->n_connections = E;
 
-  while(E--) {
+  while(E--) { /*reads every connection */
     scanf("%d %d", &u, &v);
     res->adjList[E][0]=u; res->adjList[E][1]=v;
     res->offset[u]++;
   }
 
+  /*sorts the connections read*/
   graphSort(res->adjList, res->offset, res->n_connections, res->n_vertexes);
   for(i=1; i<=V; ++i) {
     res->offset[i]+=res->offset[i-1];
@@ -93,12 +105,14 @@ Graph buildGraph() {
   return res;
 }
 
+/*destroys the graph*/
 void freeGraph(Graph g) {
   free(g->adjList);
   free(g->offset);
   free(g);
 }
 
+/* applies the function func to all elements of the graph */
 void doForEachAdjU(Graph g, int u, void (*func)(Graph, int, int)) {
   int base, max;
   base=g->offset[u-1];
@@ -110,6 +124,7 @@ void doForEachAdjU(Graph g, int u, void (*func)(Graph, int, int)) {
 }
 
 
+/* removes redundant connections and reduces the Graph to its SCC*/
 Graph reduceGraph(Graph g, int * translation) {
 
   int u, v, n_conns=0, i, j, old_u, old_v;
@@ -119,6 +134,9 @@ Graph reduceGraph(Graph g, int * translation) {
 
   res->n_vertexes = nVertex(g);
 
+
+  /* translates the vertexes to the minimum in its respective SCC, and removes
+  repeated vertexes */
   j=0;
   for (i = 0; i < nConnection(g); i++) {
     u=translation[g->adjList[i][0]];
@@ -131,6 +149,7 @@ Graph reduceGraph(Graph g, int * translation) {
 
   graphSort(g->adjList, res->offset, j, res->n_vertexes);
 
+  /* removes redudant connections */
   old_u = old_v = 0;
   for(i=0; i < j; ++i) {
     u = g->adjList[i][0];
@@ -156,6 +175,8 @@ Graph reduceGraph(Graph g, int * translation) {
   return res;
 }
 
+/*prints the Graph, shwoing the number of SCCs, connections intra-Scc and
+each connection */
 void printSccGraph(Graph g, int nScc) {
   int u;
   printf("%d\n%d\n", nScc, nConnection(g));
@@ -167,9 +188,9 @@ void printSccGraph(Graph g, int nScc) {
 
 
 
-
-/*Tarjan algorithm*/
-
+/*-------------------------------------------------------------------------*/
+/*------------------------Tarjan algorithm---------------------------------*/
+/*-------------------------------------------------------------------------*/
 static int visited = 0;
 static int n_scc = 0;
 /* Points to the first element that exists */
@@ -180,10 +201,12 @@ static int * translation;
 static int * stack;
 static int * in_stack;
 
+
 static void Tarjan(Graph g);
 static void tarjanVisit(Graph g, int vertex);
 static void tarjanVisit_aux(Graph g, int from, int to);
 static void freeTarjan();
+
 
 #define min(a,b) (a<b?a:b)
 #define stack_contains(a) (in_stack[a])
@@ -221,6 +244,7 @@ void tarjanVisit_aux(Graph g, int from, int to) {
   }
 }
 
+
 void tarjanVisit(Graph g, int vertex) {
 
   discovery[vertex] = low[vertex] = visited++;
@@ -246,7 +270,7 @@ void tarjanVisit(Graph g, int vertex) {
   }
 }
 
-
+/* frees the memory structures associated with the Tarjan algorithm*/
 void freeTarjan() {
   free(stack);
   free(in_stack);
@@ -254,6 +278,7 @@ void freeTarjan() {
   free(discovery);
   free(low);
 }
+
 
 
 int main() {
