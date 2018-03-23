@@ -6,6 +6,7 @@ author:
 - Rafael Andrade, n. 86503
 papersize: A4
 fontsize: 12pt
+geometry: margin=3cm
 ---
 
 ## Introdução
@@ -32,7 +33,7 @@ Em termos teóricos, para representar o grafo, foi usada uma lista de
 adjacências, e utilizámos o algoritmo de Tarjan para identificar SCCs.
 Em termos práticos, utilizámos a linguagem C, e a lista de adjacências é
 um *array* de tamanho do número de ligações, em que cada posição guarda dois
-inteiros (*int[]*), ao qual se junta outro *array*, de tamanho do número de
+inteiros (*int[2]*), ao qual se junta outro *array*, de tamanho do número de
 vértices, que guarda em cada posição um inteiro correspondente ao *offset*
 das suas ligações no primeiro array.
 
@@ -46,6 +47,22 @@ A solução pode ser descrita em:
     pertencentes ao mesmo SCC, e contar quantos arcos restantes existem
   - Ordenar e imprimir os ditos arcos
 
+
+Para eliminar arcos redundantes, o processo utilizado foi:
+
+  - Ordenar a lista de adjacências
+  - Percorrer a lista com 2 ponteiros (chamemos *i* e *j*). É efetuado um ciclo,
+    onde *i* é incrementado; e sempre que a *i*-ésima posição for diferente à
+    posição *i+1*, colocar esse elemento na posição *j*, e incrementar *j*;
+    senão, nada é feito. No final, podemos afirmar que a lista de adjacências de
+    tamanho *j* é uma lista ordenada de arcos sem nenhum repetido.
+    Como os arcos estão ordenados, todos os arcos que sejam iguais estarão em
+    posições consecutivas na lista, logo ao percorrer desta forma iremos "saltar"
+    por cima desses repetidos, ficando com uma cópia do arco.
+
+
+Para ordenar a lista de adjacências, foi utilizado o algoritmo Radix sort
+(versão LSD).
 
 
 ## Análise Teórica
