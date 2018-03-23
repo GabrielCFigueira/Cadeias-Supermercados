@@ -56,9 +56,9 @@ arcos.
 
 As complexidades de outros passos na solução são estes:
 
-|                        | Tarjan    | Criar Grafo | Ordenar Ligações | Destruir Grafo |
-|:----------------------:|:---------:|:-----------:|:----------------:|:--------------:|
-| Complexidade Temporal  |  O(V + E) |  O(V + E)   |      O(VElogE)   | O(1)           |
-| Complexidade Espacial  |  O(V)     |  O(E !?)    |    O(V + E)      | O(1)           |
+|                        | Tarjan    | Ordenar Ligações | Remover arcos repetidos |
+|:----------------------:|:---------:|:----------------:|:-----------------------:|
+| Complexidade Temporal  |  O(V + E) |  O(V + E)        |    O(V + E)             |
+| Complexidade Espacial  |  O(V)     |  O(V + E)        |    O(V + E)             |
 
 ## Análise prática

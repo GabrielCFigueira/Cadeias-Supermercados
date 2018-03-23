@@ -32,7 +32,7 @@ run_time(){
     TIMEFORMAT="%U+%S"
     local TIME_SUM=$(for i in $(seq $N_RUNS); do $(which time) -f "$TIMEFORMAT" "$EXECUTABLE" <"$1" 2>&1 1>/dev/null | bc; done \
                       | sort | head -n $(($N_RUNS - $N_EXCLUDE)) | tail -n +$(($N_EXCLUDE+1)) | tr '\n' + )
-    printf "scale=4; (%s0)/16\n"  "$TIME_SUM" | bc
+    printf "scale=4; (%s0)/16 * 1000\n"  "$TIME_SUM" | bc
   fi
 }
 
@@ -58,7 +58,7 @@ random_tests() {
 
   echo "Starting small random tests" >&2
   local F=`mktemp`
-  for i in $(seq 10); do
+  for i in $(seq 0); do
     printf "Test number %d\n" "$i" >&2
     local N_SCC=`shuf -i 100-1000 -n1`
     local N_V=`shuf -i 1000-100000 -n1`
