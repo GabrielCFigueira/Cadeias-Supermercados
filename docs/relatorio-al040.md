@@ -79,3 +79,22 @@ As complexidades de outros passos na solução são estes:
 | Complexidade Espacial  |  O(V)     |  O(V + E)        |    O(V + E)             |
 
 ## Análise prática
+
+Para testar experimentalmente a eficiência do algoritmo, foram gerados 45 testes
+aleatórios, com o número de vértices total a variar entre 100 000 e 1 000 000, e
+o número de arcos entre 2 a 6 vezes maior que o número de vértices. Os testes
+foram executados no sistema SIGMA, correndo num computador com processadores
+Intel(R) Xeon(R) CPU E5-2620 @ 2.00GHz, 8-core, com 16 GB de RAM total.
+
+
+![Execution time chart][graphs/run-chart.png]
+
+
+![Heap memory use chart][graphs/mem-chart.png]
+
+
+Como é possível observar nos gráficos, tanto a complexidade temporal quanto a
+espacial observadas estão em linha com o esperado. É possível observar uma
+ligeira concavidade no gráfico que mostra o tempo de execução; a razão para
+tal acontecer pode ser atribuída a escalonamento de processos num ambiente
+multi-utilizador como o de teste.
