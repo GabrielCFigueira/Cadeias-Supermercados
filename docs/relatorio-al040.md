@@ -87,10 +87,10 @@ foram executados no sistema SIGMA, correndo num computador com processadores
 Intel(R) Xeon(R) CPU E5-2620 @ 2.00GHz, 8-core, com 16 GB de RAM total.
 
 
-![Execution time chart][graphs/run-chart.png]
+![](./docs/graphs/run-chart.png)
 
 
-![Heap memory use chart][graphs/mem-chart.png]
+![](./docs/graphs/mem-chart.png)
 
 
 Como é possível observar nos gráficos, tanto a complexidade temporal quanto a
