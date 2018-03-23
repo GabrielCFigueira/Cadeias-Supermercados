@@ -5,10 +5,21 @@
  * P1 (Sr. Joao Caracol)
  */
 
+
+
+
 #include <stdlib.h>
 #include <limits.h>
 #include <string.h>
 #include <stdio.h>
+
+
+
+
+
+/*-------------------------------------------------------------------------*/
+/*------------------------Graph representation-----------------------------*/
+/*-------------------------------------------------------------------------*/
 
 
 
@@ -29,7 +40,9 @@ static void graphSort(int (*adjList)[2], int *count, int n_conns, int n_vertex);
 
 
 /* sorts a 2xn_conns array, with the first line being the most significant
-for sorting purposes */
+ * for sorting purposes
+ * this sort used radixSort (lsd), and couting sort to sort each array
+ */
 void graphSort(int (*adjList)[2], int *count, int n_conns, int n_vertexes) {
 
 
@@ -175,7 +188,7 @@ Graph reduceGraph(Graph g, int * translation) {
   return res;
 }
 
-/*prints the Graph, shwoing the number of SCCs, connections intra-Scc and
+/*prints the Graph, shwoing the number of SCCs, connections intra-SCC and
 each connection */
 void printSccGraph(Graph g, int nScc) {
   int u;
@@ -253,6 +266,8 @@ void tarjanVisit(Graph g, int vertex) {
 
   doForEachAdjU(g, vertex, tarjanVisit_aux);
 
+
+  
   if(discovery[vertex] == low[vertex]) {
     int v, lowest_in_scc, sccStackTop;
     sccStackTop=stackPointer;
